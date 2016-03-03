@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "titletime": {"type":"integer", "default":10},
+    "msgtime": {"type":"integer", "default":5},
+    "update": {"type":"integer", "default":1},
+    "apikey": {"type":"string", "default":""}
+  }
+}

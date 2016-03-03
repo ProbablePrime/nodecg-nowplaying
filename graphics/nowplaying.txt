@@ -1,0 +1,1 @@
+﻿dlrudie/Snip: Snip will get the artist, track, and album information from Spotify, iTunes, Winamp, foobar2000, or VLC and save the information to a text file. - Google Chrome

@@ -1,0 +1,29 @@
+{
+  "name": "nodecg-nowplaying",
+  "version": "2.0.0",
+  "homepage": "http://suyo.be/",
+  "authors": [
+    "Suyooo <me@suyo.be>",
+    "ProbablePrime"
+  ],
+  "description": "Shows the currently playing song from a file or last.fm",
+  "license": "MIT",
+  "nodecg": {
+    "compatibleRange": "~0.7.0",
+    "dashboardPanels": [
+      {
+        "name": "nowplaying",
+        "title": "Now Playing",
+        "width": 2,
+        "file": "panel.html"
+      }
+    ],
+    "graphics": [
+      {
+        "file": "index.html",
+        "width":1920,
+        "height":1080
+      }
+    ]
+  }
+}

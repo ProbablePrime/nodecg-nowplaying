@@ -1,18 +1,32 @@
-		<div class="input-group">
-		  <span class="input-group-addon">last.fm</span>
-		  <input type="text" class="form-control" id="music-songsource" placeholder="Last.fm Name" />
-		</div>
-		<div class="input-group">
-		  <span class="input-group-addon">Message</span>
-		  <input type="text" class="form-control" id="music-message" placeholder="Message" />
-		</div>
-		<input type="checkbox" id="music-autoenabled"> Show for <input style="width:2em" type="text" id="music-autointerval" value="10" />s on song change
-        <button type="button" class="btn btn-xs btn-primary" style="width:100%;margin-top:4px;" id="musicupdate">Update "Now Playing"</button>
-		<div class="btn-group btn-group-justified" style="margin-top:4px;">
-		  <div class="btn-group" style="padding-right:2px;">
-			<button type="button" class="btn btn-xs btn-success" id="musicshow">Show</button>
-		  </div>
-		  <div class="btn-group" style="padding-left:2px;">
-			<button type="button" class="btn btn-xs btn-danger" id="musichide">Hide</button>
-		  </div>
-		</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="components/webcomponentsjs/webcomponents-lite.min.js"></script>
+	<link rel="import" href="components/nodecg-show-hide/nodecg-show-hide.html">
+	<link rel="import" href="components/nodecg-toggle/nodecg-toggle.html">
+	<link rel="import" href="components/nodecg-message-button/nodecg-message-button.html">
+	<link rel="import" href="components/nodecg-replicant-input/nodecg-replicant-input.html">
+	<style>
+	</style>
+	<script>
+		nodecg.Replicant('musicinterval', {defaultValue: 10});
+		nodecg.Replicant('musicmessage', {defaultValue: ''});
+		nodecg.Replicant('musicauto', {defaultValue: true});
+		nodecg.Replicant('musicsource', {defaultValue: ''});
+	</script>
+</head>
+<body>
+	<nodecg-replicant-input replicant-name="musicsource" label="Last.fm Name"></nodecg-replicant-input>
+	<nodecg-replicant-input replicant-name="musicmessage" label="message"></nodecg-replicant-input>
+
+	<div style="display:flex;">
+		<nodecg-toggle replicant-name="musicauto" style="flex:1; margin-top:34px;">Auto</nodecg-toggle>
+		<nodecg-replicant-input replicant-name="musicinterval" style="flex:1.75;" label="Automatic Interval"></nodecg-replicant-input>
+	</div>
+	<hr />
+	<br />
+	<nodecg-show-hide></nodecg-show-hide>
+</body>
+
