@@ -7,14 +7,13 @@ var update = nodecg.bundleConfig.update || 1;
 // your last.fm API key (last.fm/api)
 var apikey = nodecg.bundleConfig.apikey;
 
-var auto = nodecg.Replicant('musicauto', {defaultValue: true});
+var auto = nodecg.Replicant('musicauto');
 var showing = false;
-var songsource = nodecg.Replicant('musicsource', {defaultValue: ''});
-var lastsong = "";
+var songsource = nodecg.Replicant('musicsource');
+var lastsong = '';
 
-var autoInterval = nodecg.Replicant('musicinterval', {defaultValue: 10});
-var messageRep = nodecg.Replicant('musicmessage', {defaultValue: ''});
-messageRep.on('change', updateMessage);
+var autoInterval = nodecg.Replicant('musicinterval');
+var messageRep = nodecg.Replicant('musicmessage');
 
 var curline = -1;
 var MESSAGE_SHOWN = 1;
@@ -24,15 +23,7 @@ var toggleto;
 var autotoggleto;
 var autohideto;
 
-nodecg.listenFor('show', showMusic);
-nodecg.listenFor('hide', hideMusic);
-
-$(function () {
-	$('#musiccontainer').addClass('animated slideOutRight');
-});
-
 function showMusic() {
-	console.log('show');
 	updateSong();
 	if (!showing) {
 		$('#musiccontainer').removeClass('slideOutRight').addClass('slideInRight');
@@ -47,18 +38,18 @@ function hideMusic() {
 }
 
 function updateMessage(old, newValue) {
-	console.log('updateMusic');
 	$('#musicmessage').html(newValue);
 
 	if (!newValue) {
-		if(curline === MESSAGE_SHOWN) {
+		if (curline === MESSAGE_SHOWN) {
 			toggleLines();
 		}
 		clearTimeout(toggleto);
 		curline = NO_MESSAGE;
 	} else {
-		if(curline !== MESSAGE_SHOWN) {
-			curline = MESSAGE_SHOWN;
+		if (curline === NO_MESSAGE) {
+			curline = TITLE_SHOWN;
+			clearTimeout(toggleto);
 			toggleLines();
 		}
 	}
@@ -66,23 +57,23 @@ function updateMessage(old, newValue) {
 
 setInterval(updateSong, update * 1000);
 function updateSong() {
-	if (songsource.value == "") {
-		$.get("Snip/Snip.txt",function(data,status){
-			console.log(status);
-			if (status=="success") {
+	if (songsource.value === '') {
+		$.get('Snip/Snip.txt', function (data, status) {
+			if (status=='success') {
 				updateTitle(data);
 			}
 		});
 	} else {
-		$.getJSON("http://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user="+songsource+"&api_key="+apikey+"&limit=2&format=json&callback=?", function(data) {
-			updateTitle(data.recenttracks.track[0].artist['#text'] + " - " + data.recenttracks.track[0].name);
+		$.getJSON('http://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=' + songsource + '&api_key=' + apikey + '&limit=2&format=json&callback=?', 
+		function (data) {
+			updateTitle(data.recenttracks.track[0].artist['#text'] + ' - ' + data.recenttracks.track[0].name);
 		});
 	}
 }
 function updateTitle(song) {
 	if (song !== lastsong) {
 		$('#musictitle').text(song);
-		if (curline == MESSAGE_SHOWN) {
+		if (curline === MESSAGE_SHOWN) {
 			toggleLines();
 		}
 		if (auto.value) {
@@ -108,7 +99,9 @@ function toggleLines() {
 		}, 300, 'ease-out');
 		curline = MESSAGE_SHOWN;
 		if (!auto.value) {
-			toggleto = setTimeout(toggleLines, msgtime * 1000);
+			if (!toggleto) {
+				toggleto = setTimeout(toggleLines, msgtime * 1000);
+			}
 		}
 	} else if (curline === MESSAGE_SHOWN) {
 		$('#musictitle').delay(150).transition({
@@ -121,7 +114,21 @@ function toggleLines() {
 		}, 300, 'ease-out');
 		curline = TITLE_SHOWN;
 		if (!auto.value) {
-			toggleto = setTimeout(toggleLines, titletime * 1000);
+			if (!toggleto) {
+				toggleto = setTimeout(toggleLines, titletime * 1000);
+			}
 		}
 	}
 }
+
+messageRep.on('change', updateMessage);
+nodecg.listenFor('show', showMusic);
+nodecg.listenFor('hide', hideMusic);
+
+$(function () {
+	if (messageRep.value) {
+		updateMessage(null, messageRep.value);
+	}
+
+	$('#musiccontainer').addClass('animated slideOutRight');
+});
