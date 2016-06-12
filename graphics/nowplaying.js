@@ -71,6 +71,7 @@ function updateSong() {
 	}
 }
 function updateTitle(song) {
+	if (!song) return;
 	if (song !== lastsong) {
 		$('#musictitle').text(song);
 		if (curline === MESSAGE_SHOWN) {
